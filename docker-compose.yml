@@ -1,0 +1,52 @@
+services:
+  web:
+    container_name: agoali_web
+    build:
+      context: ./app
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/app
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    depends_on:
+      - redis
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    networks:
+      - agoali-network
+
+  worker:
+    container_name: agoali_worker
+    build:
+      context: ./app
+    volumes:
+      - ./app:/app
+    command: celery -A core.celery_app worker --loglevel=info
+    depends_on:
+      - redis
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    networks:
+      - agoali-network
+
+  redis:
+    container_name: agoali_redis
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - agoali-network
+  
+  cloudflared:
+    container_name: agoali_cloudflared
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN} 
+    networks:
+      - agoali-network
+
+networks:
+  agoali-network:
+    name: agoali-network
