@@ -10,9 +10,12 @@ services:
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
     depends_on:
       - redis
+    env_file:
+      - .env
     environment:
       - CELERY_BROKER_URL=${CELERY_BROKER_URL} # redis://redis:6379/0
       - CELERY_RESULT_BACKEND=r${CELERY_RESULT_BACKEND} # edis://redis:6379/0
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
     networks:
       - agoali-network
 
@@ -25,9 +28,12 @@ services:
     command: celery -A core.celery_app worker --loglevel=info
     depends_on:
       - redis
+    env_file:
+      - .env
     environment:
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL} # redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=r${CELERY_RESULT_BACKEND} # edis://redis:6379/0
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
     networks:
       - agoali-network
 
@@ -43,6 +49,8 @@ services:
     container_name: agoali_cloudflared
     image: cloudflare/cloudflared:latest
     restart: unless-stopped
+    env_file:
+      - .env
     command: tunnel --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN}
     networks:
       - agoali-network

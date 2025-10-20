@@ -1,7 +1,6 @@
 import os
 from celery import Celery
 
-# Haal de broker URL op uit de environment variables (gezet in docker-compose)
 broker_url = os.environ.get("CELERY_BROKER_URL")
 result_backend = os.environ.get("CELERY_RESULT_BACKEND")
 

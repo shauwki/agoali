@@ -5,7 +5,6 @@ def find_mod(query: str):
     Mock-functie om een zoekopdracht te simuleren.
     """
     print(f"LOGIC: Zoeken naar GTA5 mod: '{query}'")
-    # Simuleer 2 seconden werk (scrapen)
     time.sleep(2)
     mock_result = {
         "title": "Gevonden Mock Mod",
