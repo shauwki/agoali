@@ -2,6 +2,7 @@ composer.phar
 /vendor/
 .env
 !example.env
+**/__pycache__
 
 composer.phar
 composer.lock

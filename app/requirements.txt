@@ -1,0 +1,15 @@
+# Web Server
+fastapi
+uvicorn[standard]
+
+# Task Queue
+celery
+redis
+
+# Telegram
+python-telegram-bot
+
+# Web Scraping (zoals in je plan)
+requests
+beautifulsoup4
+selenium

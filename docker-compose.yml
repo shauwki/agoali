@@ -11,8 +11,8 @@ services:
     depends_on:
       - redis
     environment:
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL} # redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=r${CELERY_RESULT_BACKEND} # edis://redis:6379/0
     networks:
       - agoali-network
 
@@ -43,7 +43,7 @@ services:
     container_name: agoali_cloudflared
     image: cloudflare/cloudflared:latest
     restart: unless-stopped
-    command: tunnel --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN} 
+    command: tunnel --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN}
     networks:
       - agoali-network
 
